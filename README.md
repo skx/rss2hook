@@ -51,7 +51,7 @@ can test interactively like so:
 
 ### Sample Webhook
 
-There is a simple webhook example beneath [webhook/](webhook/) which
+There is a simple webserver located beneath [webhook/](webhook/) which
 will listen upon http://localhost:8080, and dump any POST submission to the
 console.
 
@@ -64,7 +64,7 @@ Testing it via `curl` would look like this:
 
       $ curl --header "Content-Type: application/json"  \
       --request POST \
-      --data '{"username":"xyz","password":"xyz"}' \
+      --data '{"username":"blah","password":"blah"}' \
       http://localhost:8080/
 
 The [sample.cfg](sample.cfg) file will POST to this end-point so you can
