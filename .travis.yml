@@ -6,6 +6,16 @@ matrix:
   allow_failures:
   - go: tip
 before_script:
-  - go vet ./...
+- go vet ./...
 script:
 - "./.travis/build-all"
+deploy:
+  provider: releases
+  api_key:
+    secure: OJY9HX3F3NvmJEPwkPrOmUT6y5MInzKcuo9P6mQ+RpVwdfW/8/xFlG9DReeNMILUu9iUvNyPiMRP3IA7d7CxbRPDYF9NA3OQwia7sLYwgdp5Ya35ul7JrongX3iPm3Up++Y0TTm40vtDGe4ggub+QTuuavEUvLkktGxKRI6kmx4C1uyoFHxh4GoP+q5Q4BI6doVbYesuT86UnDg8bcrdq1T8TinJM9gAYHOTGI08K5xnfz+ofqf4jefqyNqEGY8tv1FpAXChAdvaayyLNrIU+1Ls+jYvA/EDQSW4cb485J6eoGtYu8oFJn2uzOTcDY+26Xk68g6ISkU9QairL81GHSZQ9seScYwntoZTj9m/DZX7ZG87g3pSJ+dlA+JSGoZhi/8g145BrMFt3Z2QyJBBGHkn76kQF8F1JfWaV2QHhdoSQe2PMkGLiyUWXdTEtdVn++mqrW95OQMTi106iiAEKstn0mQbzhAEQ8zht6GH4LnfJDS0vBDsHZGBQcc8djEo4UPAzG5rAMB4RnWouUqzFz4N8lE6U4ww1w2Bt2jF5krv0fCERdBRB7GK8tEnwlx0eh/qrqJQ5nWDuViR+k/GzjSFyphkmb2O2gATV6Yfe+QJv3YVti80iyqaWBBhEcpeupZSfsB4MPXp3gJcr3TAmqP/ymWldvEzZyY75a1HaMg=
+  file_glob: true
+  file:
+    - "rss2hook-*"
+  skip_cleanup: true
+  on:
+    tags: true
