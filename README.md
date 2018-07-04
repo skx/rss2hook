@@ -1,3 +1,8 @@
+[![Travis CI](https://img.shields.io/travis/skx/rss2hook/master.svg?style=flat-square)](https://travis-ci.org/skx/rss2hook)
+[![Go Report Card](https://goreportcard.com/badge/github.com/skx/rss2hook)](https://goreportcard.com/report/github.com/skx/rss2hook)
+[![license](https://img.shields.io/github/license/skx/rss2hook.svg)](https://github.com/skx/rss2hook/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/release/skx/rss2hook.svg)](https://github.com/skx/rss2hook/releases/latest)
+
 # RSS2Hook
 
 This project is a self-hosted utility which will make HTTP POST
