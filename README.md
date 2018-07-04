@@ -4,10 +4,11 @@ This project is a self-hosted utility which will make HTTP POST
 requests to remote web-hooks when new items appear in an RSS feed.
 
 
+
 ## Rational
 
 I have a couple of webhooks in-place already which will take incoming
-HTTP requests and "do stuff" with them, for example:
+HTTP submissions and "do stuff" with them, for example:
 
 * Posting to my alerting system.
    * Which is called [purppura](https://github.com/skx/purppura/) and is pretty neat.
@@ -20,6 +21,7 @@ github releases of projects.  For example my git-host runs [gitbucket](https://g
 * https://github.com/gitbucket/gitbucket/releases.atom
 
 
+
 ## Deployment
 
 If you have a working golang setup you should be able to install this
@@ -27,6 +29,7 @@ application via:
 
     go get -u  github.com/skx/rss2hook
     go install github.com/skx/rss2hook
+
 
 
 ## Setup
@@ -49,7 +52,8 @@ can test interactively like so:
      $ rss2hook -config ./sample.cfg
 
 
-### Sample Webhook
+
+### Sample Webhook Receiver
 
 There is a simple webserver located beneath [webhook/](webhook/) which
 will listen upon http://localhost:8080, and dump any POST submission to the
@@ -71,6 +75,18 @@ The [sample.cfg](sample.cfg) file will POST to this end-point so you can
 see how things work:
 
     $ rss2hook --config=sample.cfg
+
+
+
+## Implementation Notes
+
+* By default the server will poll all configured feeds immediately
+upon startup.
+   * It will look for changes every five minutes.
+* To ensure items are only announced once state is kept on the filesystem.
+   * Beneath the directory `~/.rss2hook/seen/`.
+* Feed items are submitted to the webhook as JSON.
+
 
 
 ## Feedback?
