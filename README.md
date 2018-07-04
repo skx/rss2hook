@@ -15,7 +15,7 @@ HTTP requests and "do stuff" with them, for example:
    * IRC was mattermost before slack before born.
 
 I _also_ have a bunch of RSS feeds that I follow, typically these include
-github releases of projects.  For example my git-host is [gitbucket](https://github.com/gitbucket/gitbucket) so I subscribe to the release feed via:
+github releases of projects.  For example my git-host runs [gitbucket](https://github.com/gitbucket/gitbucket) so I subscribe to the release feed of that, to ensure I'm always up to date:
 
 * https://github.com/gitbucket/gitbucket/releases.atom
 
@@ -33,16 +33,18 @@ application via:
 
 There are two parts to the setup:
 
-* Configure the list of feeds and the corresponding hooks to post to.
+* Configure the list of feeds and the corresponding hooks to POST to.
 * Ensure the program is running.
 
 For the first create a configuration-file like so:
 
     http://example.com/feed.rss = https://webhook.example.com/notify/me
-...
 
-For the second you can use your favourite supervision took, but in short
-you'll want to run something like this:
+(There is a sample configuration file [sample.cfg](sample.cfg) which
+will demonstrate this more verbosely.)
+
+You can use your favourite supervision tool to launch the deamon, but you
+can test interactively like so:
 
      $ rss2hook -config ./sample.cfg
 
@@ -50,7 +52,7 @@ you'll want to run something like this:
 ### Sample Webhook
 
 There is a simple webhook example beneath [webhook/](webhook/) which
-will listen upon localhost:8080, and dump any POST submission to the
+will listen upon http://localhost:8080, and dump any POST submission to the
 console.
 
 You can launch it like so:
@@ -65,10 +67,11 @@ Testing it via `curl` would look like this:
       --data '{"username":"xyz","password":"xyz"}' \
       http://localhost:8080/
 
-Finally you'd use the [sample.cfg](sample.cfg) file to POST to this
-server by launching the application:
+The [sample.cfg](sample.cfg) file will POST to this end-point so you can
+see how things work:
 
     $ rss2hook --config=sample.cfg
+
 
 ## Feedback?
 
