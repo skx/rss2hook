@@ -1,0 +1,11 @@
+language: go
+sudo: false
+matrix:
+  include:
+  - go: tip
+  allow_failures:
+  - go: tip
+before_script:
+  - go vet ./...
+script:
+- "./.travis/build-all"
