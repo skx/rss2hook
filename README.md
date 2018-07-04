@@ -35,6 +35,8 @@ application via:
     go get -u  github.com/skx/rss2hook
     go install github.com/skx/rss2hook
 
+If you prefer you can fetch a binary from [our release page](github.com/skx/rss2hook/releases).  Currently there is only a binary for Linux (amd64) due to the use of `cgo` in our dependencies.
+
 
 
 ## Setup
