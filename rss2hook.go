@@ -1,3 +1,9 @@
+// rss2hook is a simple utility which will make HTTP POST
+// requests to remote web-hooks when new items appear in an RSS feed.
+//
+// Steve
+//
+
 package main
 
 import (
@@ -24,7 +30,10 @@ import (
 // RSSEntry describes a single RSS feed and the corresponding hook
 // to POST to.
 type RSSEntry struct {
+	// The URL of the RSS/Atom feed
 	feed string
+
+	// The end-point to make the webhook request to.
 	hook string
 }
 
@@ -47,6 +56,8 @@ func loadConfig(filename string) {
 	//
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+
+		// Get the next line, and strip leading/trailing space
 		tmp := scanner.Text()
 		tmp = strings.TrimSpace(tmp)
 
@@ -60,9 +71,17 @@ func loadConfig(filename string) {
 			//
 			parser := regexp.MustCompile("^(.*)=([^=]+)")
 			match := parser.FindStringSubmatch(tmp)
+
+			//
+			// OK we found a suitable entry.
+			//
 			if len(match) == 3 {
-				entry := RSSEntry{feed: strings.TrimSpace(match[1]),
-					hook: strings.TrimSpace(match[2])}
+
+				feed := strings.TrimSpace(match[1])
+				hook := strings.TrimSpace(match[2])
+
+				// Append the new entry to our list
+				entry := RSSEntry{feed: feed, hook: hook}
 				Loaded = append(Loaded, entry)
 			}
 
@@ -71,22 +90,29 @@ func loadConfig(filename string) {
 
 }
 
-// fetchFeed fetches a feed from the remote URL.
+// fetchFeed fetches the contents of the specified URL.
 func fetchFeed(url string) (string, error) {
 
+	// Ensure we setup a timeout for our fetch
 	client := &http.Client{Timeout: time.Duration(5 * time.Second)}
+
+	// We'll only make a GET request
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err
 	}
 
+	// We ensure we identify ourself.
 	req.Header.Set("User-Agent", "rss2email (https://github.com/skx/rss2email)")
+
+	// Make the request
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
 
+	// Read the body returned
 	output, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
@@ -136,8 +162,12 @@ func recordSeen(parent string, item *gofeed.Item) {
 // triggers `notify` upon the resulting entry
 func checkFeeds() {
 
+	//
+	// For each thing we're monitoring
+	//
 	for _, monitor := range Loaded {
 
+		// Fetch the feed-contents
 		content, err := fetchFeed(monitor.feed)
 
 		if err != nil {
@@ -146,7 +176,7 @@ func checkFeeds() {
 			continue
 		}
 
-		// Now we have the content - parse the feed
+		// Now parse the feed contents into a set of items
 		fp := gofeed.NewParser()
 		feed, err := fp.ParseString(content)
 		if err != nil {
@@ -154,13 +184,18 @@ func checkFeeds() {
 			continue
 		}
 
-		// For each entry in the feed ..
+		// For each entry in the feed
 		for _, i := range feed.Items {
 
 			// If we've not already notified about this one.
 			if isNew(monitor.feed, i) {
 
+				// Trigger the notification
 				err := notify(monitor.hook, i)
+
+				// and if that notification succeeded
+				// then record this item as having been
+				// processed successfully.
 				if err == nil {
 					recordSeen(monitor.feed, i)
 				}
@@ -173,6 +208,9 @@ func checkFeeds() {
 //
 // The RSS-item is submitted as a JSON-object.
 func notify(hook string, item *gofeed.Item) error {
+
+	// We'll post the item as a JSON object.
+	// So first of all encode it.
 	jsonValue, err := json.Marshal(item)
 	if err != nil {
 		fmt.Printf("notify: Failed to encode JSON:%s\n", err.Error())
@@ -180,7 +218,7 @@ func notify(hook string, item *gofeed.Item) error {
 	}
 
 	//
-	// Post to purppura
+	// Post to the specified hook URL.
 	//
 	res, err := http.Post(hook,
 		"application/json",
@@ -228,21 +266,30 @@ func main() {
 	//
 	loadConfig(*config)
 
+	//
 	// Show the things we're monitoring
+	//
 	for _, ent := range Loaded {
 		fmt.Printf("Monitoring feed %s\nPosting to %s\n\n",
 			ent.feed, ent.hook)
 	}
 
-	// Make the initial load
+	//
+	// Make the initial scan of feeds immediately to avoid waiting too
+	// long for the first time.
+	//
 	checkFeeds()
 
-	// Now repeat that every five minutes
+	//
+	// Now repeat that every five minutes.
+	//
 	c := cron.New()
 	c.AddFunc("@every 5m", func() { checkFeeds() })
 	c.Start()
 
-	// Wait to be terminated.
+	//
+	// Now we can loop waiting to be terminated via ctrl-c, etc.
+	//
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
