@@ -1,4 +1,3 @@
-[![Travis CI](https://img.shields.io/travis/skx/rss2hook/master.svg?style=flat-square)](https://travis-ci.org/skx/rss2hook)
 [![Go Report Card](https://goreportcard.com/badge/github.com/skx/rss2hook)](https://goreportcard.com/report/github.com/skx/rss2hook)
 [![license](https://img.shields.io/github/license/skx/rss2hook.svg)](https://github.com/skx/rss2hook/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/release/skx/rss2hook.svg)](https://github.com/skx/rss2hook/releases/latest)
@@ -110,6 +109,16 @@ it would get more interesting:
 Anyway it would be fun to implement, but I'm not sure there is a decent
 revenue model out there for it.  Especially when you can wire up [IFTTT](https://ifttt.com/) or [similar](https://zapier.com/apps/rss/integrations/webhook/1746/send-a-webhook-when-an-rss-feed-is-updated) system to do the same thing.
 
+
+## Github Setup
+
+This repository is configured to run tests upon every commit, and when
+pull-requests are created/updated.  The testing is carried out via
+[.github/run-tests.sh](.github/run-tests.sh) which is used by the
+[github-action-tester](https://github.com/skx/github-action-tester) action.
+
+Releases are automated in a similar fashion via [.github/build](.github/build),
+and the [github-action-publish-binaries](https://github.com/skx/github-action-publish-binaries) action.
 
 Steve
 --
