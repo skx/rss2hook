@@ -2,6 +2,17 @@
 [![license](https://img.shields.io/github/license/skx/rss2hook.svg)](https://github.com/skx/rss2hook/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/release/skx/rss2hook.svg)](https://github.com/skx/rss2hook/releases/latest)
 
+* [RSS2Hook](#rss2hook)
+* [Rational](#rational)
+* [Installation](#installation)
+  * [Build without Go Modules (Go before 1.11)](#build-without-go-modules-go-before-111)
+  * [Build with Go Modules (Go 1.11 or higher)](#build-with-go-modules-go-111-or-higher)
+* [Setup](#setup)
+  * [Sample Webhook Receiver](#sample-webhook-receiver)
+* [Implementation Notes](#implementation-notes)
+* [Github Setup](#github-setup)
+
+
 # RSS2Hook
 
 This project is a self-hosted utility which will make HTTP POST
@@ -25,16 +36,21 @@ github releases of projects.  For example my git-host runs [gitbucket](https://g
 * https://github.com/gitbucket/gitbucket/releases.atom
 
 
+## Installation
 
-## Deployment
+There are two ways to install this project from source, which depend on the version of the [go](https://golang.org/) version you're using.
 
-If you have a working golang setup you should be able to install this
-application via:
+If you prefer you can fetch a binary from [our release page](https://github.com/skx/rss2hook/releases).  Currently there is only a binary for Linux (amd64) due to the use of `cgo` in our dependencies.
 
-    go get -u  github.com/skx/rss2hook
-    go install github.com/skx/rss2hook
+## Build without Go Modules (Go before 1.11)
 
-If you prefer you can fetch a binary from [our release page](github.com/skx/rss2hook/releases).  Currently there is only a binary for Linux (amd64) due to the use of `cgo` in our dependencies.
+    go get -u github.com/skx/rss2hook
+
+## Build with Go Modules (Go 1.11 or higher)
+
+    git clone https://github.com/skx/rss2hook ;# make sure to clone outside of GOPATH
+    cd rss2hook
+    go install
 
 
 
@@ -93,21 +109,6 @@ upon startup.
    * Beneath the directory `~/.rss2hook/seen/`.
 * Feed items are submitted to the webhook as JSON.
 
-
-
-## Feedback?
-
-Turning this into a SaaS project would be interesting.  A simple setup
-would be very straight-forward to implement, however at a larger scale
-it would get more interesting:
-
-* Assume two people have subscribed to the same feed.
-   * But they did so a few days apart.
-* That means what is "new" to each of them differs.
-   * So you need to keep track of "seen" vs. "new" on a per-user __and__ per-feed basis.
-
-Anyway it would be fun to implement, but I'm not sure there is a decent
-revenue model out there for it.  Especially when you can wire up [IFTTT](https://ifttt.com/) or [similar](https://zapier.com/apps/rss/integrations/webhook/1746/send-a-webhook-when-an-rss-feed-is-updated) system to do the same thing.
 
 
 ## Github Setup
