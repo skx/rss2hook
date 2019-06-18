@@ -41,6 +41,10 @@ type RSSEntry struct {
 // configuration file
 var Loaded []RSSEntry
 
+// Timeout is the (global) timeout we use when loading remote RSS
+// feeds.
+var Timeout time.Duration
+
 // loadConfig loads the named configuration file and populates our
 // `Loaded` list of RSS-feeds & Webhook addresses
 func loadConfig(filename string) {
@@ -94,7 +98,7 @@ func loadConfig(filename string) {
 func fetchFeed(url string) (string, error) {
 
 	// Ensure we setup a timeout for our fetch
-	client := &http.Client{Timeout: time.Duration(5 * time.Second)}
+	client := &http.Client{Timeout: Timeout}
 
 	// We'll only make a GET request
 	req, err := http.NewRequest("GET", url, nil)
@@ -254,7 +258,11 @@ func main() {
 
 	// Parse the command-line flags
 	config := flag.String("config", "", "The path to the configuration-file to read")
+	timeout := flag.Duration("timeout", 5*time.Second, "The timeout used for fetching the remote feeds")
 	flag.Parse()
+
+	// Setup the default timeout.
+	Timeout = *timeout
 
 	if *config == "" {
 		fmt.Printf("Please specify a configuration-file to read\n")
