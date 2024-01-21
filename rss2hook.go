@@ -73,7 +73,7 @@ func loadConfig(filename string) {
 			//
 			// Otherwise find the feed + post-point
 			//
-			parser := regexp.MustCompile("^(.*)=([^=]+)")
+			parser := regexp.MustCompile("^(.+?)=([^=].+)")
 			match := parser.FindStringSubmatch(tmp)
 
 			//
