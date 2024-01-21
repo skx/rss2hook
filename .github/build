@@ -3,6 +3,10 @@
 # The basename of our binary
 BASE="rss2hook"
 
+
+# I don't even ..
+go env -w GOFLAGS="-buildvcs=false"
+
 #
 # We build on only a single platform/arch.
 #
